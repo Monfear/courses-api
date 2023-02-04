@@ -1,5 +1,7 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
+import router from './routers/router';
 
+// @ server
 const port: number = 3000;
 const hostname: string = 'localhost';
 const app: Express = express();
@@ -16,10 +18,5 @@ const app: Express = express();
     }
 })();
 
-app.get('/', (req: Request, res: Response): void => {
-    res.status(200).send('<h1>home</h1>')
-});
-
-app.get('/', (req: Request, res: Response): void => {
-    res.status(404).send('<h1>not found</h1>');
-});
+// @ routers
+app.use('/', router);
