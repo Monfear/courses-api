@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"tsc -w\" \"nodemon dist/app.js\""
+    "start": "concurrently \"tsc -w\" \"nodemon dist/app.js\"",
+    "build": "tsc",
+    "clean": "rimraf dist",
+    "reload": "concurrently \"rimraf dist\" \"tsc\""
   },
   "author": "",
   "license": "ISC",
@@ -14,9 +17,11 @@
     "concurrently": "^7.6.0",
     "dotenv": "^16.0.3",
     "nodemon": "^2.0.20",
+    "rimraf": "^4.1.2",
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "winston": "^3.8.2"
   }
 }

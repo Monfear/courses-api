@@ -1,6 +1,7 @@
 import express, { Express } from "express";
 import router from './routers/router';
-import { configDotenv } from "./utils/utils";
+import { configDotenv } from "./utils/dotenv";
+import { logger } from "./utils/logger";
 
 // @ server
 const port: number = 3000;
@@ -12,7 +13,8 @@ const app: Express = express();
         configDotenv();
 
         app.listen(port, hostname, (): void => {
-            console.log(`app is listening on ${hostname} at port ${port}`);
+            // console.log(`=> app is listening on ${hostname} at port ${port}`);
+            logger.info(`=> app is listening on ${hostname} at port ${port}`)
         });
     } catch (error: unknown) {
         if (error instanceof Error) {
@@ -21,10 +23,13 @@ const app: Express = express();
     };
 })();
 
+// ? ************************************
 (function test(): void {
-    // console.log(process.argv);
-    console.log(process.env.TEST);
+    // pass
+    // console.log(process.env.LOGGER_LEVEL);
+    // console.log(process.env.NODE_ENV)
 })();
+// ? ************************************
 
 // @ routers
 app.use('/', router);
