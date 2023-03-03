@@ -2,34 +2,36 @@ import express, { Express } from "express";
 import router from './routers/router';
 import { configDotenv } from "./utils/dotenv";
 import { logger } from "./utils/logger";
+// import { logger } from "./utils/logger";
 
-// @ server
-const port: number = 3000;
-const hostname: string = 'localhost';
-const app: Express = express();
+class App {
+    private port: number = 3000;
+    private hostname: string = 'localhost';
+    private app: Express = express();
 
-(function init(): void {
-    try {
+    constructor() {
         configDotenv();
+    };
 
-        app.listen(port, hostname, (): void => {
-            // console.log(`=> app is listening on ${hostname} at port ${port}`);
-            logger.info(`=> app is listening on ${hostname} at port ${port}`)
-        });
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            console.warn(error.message);
+    public init(): void {
+        try {
+            this.app.listen(this.port, this.hostname, (): void => {
+                logger.info(`app is listening on ${this.hostname} at port ${this.port}`);
+            });
+
+            this.setupRouters();
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                console.warn(error.message);
+            };
         };
     };
-})();
 
-// ? ************************************
-(function test(): void {
-    // pass
-    // console.log(process.env.LOGGER_LEVEL);
-    // console.log(process.env.NODE_ENV)
-})();
-// ? ************************************
+    private setupRouters(): void {
+        this.app.use('/', router);
+    };
+}
 
-// @ routers
-app.use('/', router);
+(function runApp(): void {
+    new App().init();
+})();

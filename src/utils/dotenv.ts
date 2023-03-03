@@ -5,10 +5,10 @@ export function configDotenv(): void {
         const dotenvConfig: dotenv.DotenvConfigOutput = dotenv.config();
 
         if (dotenvConfig.error) {
-            throw new Error('Loading environment variables has failed.');
+            throw new Error('[-] Loading environment variables has failed.');
         };
 
-        console.log('=> dotenv configuration correct')
+        console.log('[+] dotenv configuration correct')
     } catch (error: unknown) {
         if (error instanceof Error) {
             console.warn(error.message);
