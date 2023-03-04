@@ -1,61 +1,41 @@
 import winston from 'winston';
-import { LEVELS } from "../types/Levels.enum";
+import { Level } from "../types/Level.type";
 
-export const logger: winston.Logger = winston.createLogger({
-    level: LEVELS.TEST,
-    format: winston.format.json({
-        space: 4,
-    }),
-    transports: [
-        new winston.transports.File({
-            filename: 'logs/all.log',
-        }),
-        new winston.transports.File({
-            filename: 'logs/error.log',
-        }),
-    ],
-});
+export class Logger {
+    private logger: winston.Logger;
 
-if (process.env.NODE_ENV !== 'PRODUCTION') {
-    logger.add(new winston.transports.Console({
-        format: winston.format.simple(),
-    }));
+    constructor(private level: Level) {
+        this.create();
+        this.checkMode();
+    };
+
+    get _logger (): winston.Logger {
+        return this.logger;
+    };
+
+    private create(): void {
+        this.logger = winston.createLogger({
+            level: this.level,
+            format: winston.format.json({
+                space: 4,
+            }),
+            transports: [
+                new winston.transports.File({
+                    filename: 'logs/all.log',
+                }),
+                new winston.transports.File({
+                    filename: 'logs/error.log'
+                })
+            ]
+        });
+    };
+
+    private checkMode(): void {
+        console.log(process.env.NODE_ENV);
+        if (process.env.NODE_ENV !== 'PRODUCTION') {
+            this.logger.add(new winston.transports.Console({
+                format: winston.format.simple(),
+            }));
+        };
+    };
 };
-
-// export class Logger {
-//     public logger: winston.Logger;
-
-//     constructor(private level: string) {
-//         this.create();
-//         this.checkMode();
-//     }
-
-//     private create(): void {
-//         this.logger = winston.createLogger({
-//             level: this.level,
-//             format: winston.format.json({
-//                 space: 4,
-//             }),
-//             transports: [
-//                 new winston.transports.File({
-//                     filename: 'logs/all.log',
-//                 }),
-//                 new winston.transports.File({
-//                     filename: 'logs/error.log'
-//                 })
-//             ]
-//         });
-//     }
-
-//     private checkMode(): void {
-//         if (process.env.NODE_ENV !== 'PRODUCTION') {
-//             this.logger.add(new winston.transports.Console({
-//                 format: winston.format.simple(),
-//             }));
-//         };
-//     };
-
-//     public testInfo(): void {
-//         this.logger.info('teeest')
-//     }
-// }
