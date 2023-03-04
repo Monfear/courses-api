@@ -33,7 +33,7 @@ class App {
     private setupRouters(): void {
         this.app.use('/', router);
     };
-} 
+};
 
 (function runApp(): void {
     new App().init();

@@ -31,7 +31,8 @@ export class Logger {
     };
 
     private checkMode(): void {
-        console.log(process.env.NODE_ENV);
+        console.log(`[i] current mode: ${process.env.NODE_ENV}`);
+
         if (process.env.NODE_ENV !== 'PRODUCTION') {
             this.logger.add(new winston.transports.Console({
                 format: winston.format.simple(),

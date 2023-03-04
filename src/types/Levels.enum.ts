@@ -1,6 +1,6 @@
 export enum LEVELS  {
     ERROR = 'error',
-    warn = 'warn',
+    WARN = 'warn',
     INFO = 'info',
     HTTP = 'http',
     VERBOSE = 'verbose',
