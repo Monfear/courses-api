@@ -4,7 +4,8 @@ import appRouter from './routers/appRouter';
 import { LEVELS } from "./types/Levels.enum";
 import { configDotenv } from "./utils/dotenv";
 import { Logger } from "./utils/logger";
-import mysql from 'mysql';
+import { Connection } from 'mysql';
+import { queries } from "./db/queries";
 
 class App {
     private port: number = 3000;
@@ -12,7 +13,7 @@ class App {
     private app: Express = express();
 
     private logger: Logger;
-    private db: mysql.Connection;
+    protected db: Connection;
 
     constructor() {
         configDotenv();
@@ -20,13 +21,13 @@ class App {
         this.logger = new Logger(LEVELS.INFO);
         this.db = connectDB();
 
-        this.makeQuery('select * from users');
+        queries.makeQuery(this.db, 'select * from users');
     };
 
     public init(): void {
         try {
             this.app.listen(this.port, this.hostname, (): void => {
-                this.logger._logger.info(`[i] app is listening on ${this.hostname} at port ${this.port}`);
+                this.logger.info(`[i] app is listening on ${this.hostname} at port ${this.port}`);
             });
 
             this.setupRouters();
@@ -41,15 +42,8 @@ class App {
         this.app.use('/', appRouter);
     };
 
-    private makeQuery(query: string): void {
-        this.db.query(query, (error: mysql.MysqlError, result: any) => {
-            if (!error) {
-                console.log(result);
-            } else {
-                console.warn(error.sqlMessage);
-            };
-        });
-    };
+    // @ ** in progress **
+
 };
 
 (function runApp(): void {
