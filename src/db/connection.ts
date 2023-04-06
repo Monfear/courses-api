@@ -12,8 +12,8 @@ function connectDB(): mysql.Connection {
         if (!err) {
             console.log('[+] db connected');
         } else {
-            console.log(err.message);
-        }
+            console.log(`[-] ${err.message}`);
+        };
     });
 
     return db;
