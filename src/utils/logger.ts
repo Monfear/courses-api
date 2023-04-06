@@ -9,10 +9,6 @@ export class Logger {
         this.checkMode();
     };
 
-    get _logger (): winston.Logger {
-        return this.logger;
-    };
-
     private create(): void {
         this.logger = winston.createLogger({
             level: this.level,
@@ -38,5 +34,9 @@ export class Logger {
                 format: winston.format.simple(),
             }));
         };
+    };
+
+    public info(message: string): void {
+        this.logger.info(message);
     };
 };
