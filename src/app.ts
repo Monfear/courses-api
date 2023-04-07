@@ -1,11 +1,11 @@
 import express, { Express } from "express";
-import connectDB from "./db/connection";
-import appRouter from './routers/appRouter';
-import { LEVELS } from "./types/Levels.enum";
 import { configDotenv } from "./utils/dotenv";
-import { Logger } from "./utils/logger";
 import { Connection } from 'mysql';
+import connectDB from "./db/connection";
 import connectOrm from "./db/orm";
+import { Logger } from "./utils/logger";
+import { LEVELS } from "./types/Levels.enum";
+import appRouter from './routers/appRouter';
 
 class App  {
     private port: number = 3000;
@@ -20,16 +20,16 @@ class App  {
     // @ **
 
     constructor() {
-        this.setupUtils();
-        this.setupDB();
+        this.assambleUtils();
+        this.assembleDB();
     };
 
-    private setupUtils(): void {
+    private assambleUtils(): void {
         configDotenv();
         this.logger = new Logger(LEVELS.INFO);
     };
 
-    private setupDB(): void {
+    private assembleDB(): void {
         this.db = connectDB();
         connectOrm();
     };
@@ -40,7 +40,7 @@ class App  {
                 this.logger.info(`[i] app is listening on ${this.hostname} at port ${this.port}`);
             });
 
-            this.setupRouters();
+            this.arrangeRouters();
         } catch (error: unknown) {
             if (error instanceof Error) {
                 console.warn(`[-] ${error.message}`);
@@ -48,7 +48,7 @@ class App  {
         };
     };
 
-    private setupRouters(): void {
+    private arrangeRouters(): void {
         this.app.use('/', appRouter);
     };
 
