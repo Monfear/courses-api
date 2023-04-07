@@ -5,23 +5,33 @@ import { LEVELS } from "./types/Levels.enum";
 import { configDotenv } from "./utils/dotenv";
 import { Logger } from "./utils/logger";
 import { Connection } from 'mysql';
-import { queries } from "./db/queries";
+import connectOrm from "./db/orm";
 
-class App {
+class App  {
     private port: number = 3000;
     private hostname: string = 'localhost';
     private app: Express = express();
 
-    private logger: Logger;
     protected db: Connection;
+    private logger: Logger;
+
+    // @ ** in progress properties **
+
+    // @ **
 
     constructor() {
+        this.setupUtils();
+        this.setupDB();
+    };
+
+    private setupUtils(): void {
         configDotenv();
-
         this.logger = new Logger(LEVELS.INFO);
-        this.db = connectDB();
+    };
 
-        queries.makeQuery(this.db, 'select * from users');
+    private setupDB(): void {
+        this.db = connectDB();
+        connectOrm();
     };
 
     public init(): void {
@@ -33,7 +43,7 @@ class App {
             this.setupRouters();
         } catch (error: unknown) {
             if (error instanceof Error) {
-                console.warn(error.message);
+                console.warn(`[-] ${error.message}`);
             };
         };
     };
@@ -42,8 +52,9 @@ class App {
         this.app.use('/', appRouter);
     };
 
-    // @ ** in progress **
+    // @ ** in progress methods **
 
+    // @ **
 };
 
 (function runApp(): void {
