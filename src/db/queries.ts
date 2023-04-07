@@ -22,16 +22,4 @@ export const queries = {
             };
         });
     },
-
-    addMultipleData: function (db: Connection, table: string, data: any[][]): void {
-        const query: string = `INSERT INTO ${table} VALUES ?`;
-
-        db.query(query, data, (error: MysqlError | null, result: any): void => {
-            if (!error) {
-                console.log(result);
-            } else {
-                console.warn(`[-] ${error.sqlMessage}`);
-            };
-        });
-    },
 };
