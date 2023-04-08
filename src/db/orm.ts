@@ -1,15 +1,18 @@
 import { DataSource } from "typeorm";
+import { Course } from "../models/course.model";
+import { Lesson } from "../models/lesson.model";
 
 function connectOrm(): void {
     const dataSource: DataSource = new DataSource({
         type: 'mysql',
-        host: 'localhost',
-        username: 'root',
-        password: 'toor',
         port: 3306,
-        database: 'my_db',
+        host: process.env.DB_HOST,
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
         ssl: true,
-        entities: [],
+        entities: [Course, Lesson],
+        synchronize: true,
         logging: true,
     });
 

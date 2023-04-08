@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import express, { Express } from "express";
 import { configDotenv } from "./utils/dotenv";
 import { Connection } from 'mysql';
@@ -6,6 +7,7 @@ import connectOrm from "./db/orm";
 import { Logger } from "./utils/logger";
 import { LEVELS } from "./types/Levels.enum";
 import appRouter from './routers/appRouter';
+import { queries } from "./db/queries";
 
 class App  {
     private port: number = 3000;
@@ -22,6 +24,8 @@ class App  {
     constructor() {
         this.assambleUtils();
         this.assembleDB();
+
+        queries.makeQuery(this.db, 'DESC COURSES');
     };
 
     private assambleUtils(): void {
@@ -34,7 +38,7 @@ class App  {
         connectOrm();
     };
 
-    public init(): void {
+    public run(): void {
         try {
             this.app.listen(this.port, this.hostname, (): void => {
                 this.logger.info(`[i] app is listening on ${this.hostname} at port ${this.port}`);
@@ -57,6 +61,6 @@ class App  {
     // @ **
 };
 
-(function runApp(): void {
-    new App().init();
+(function startApp(): void {
+    new App().run();
 })();
