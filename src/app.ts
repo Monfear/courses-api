@@ -2,19 +2,21 @@ import 'reflect-metadata';
 import express, { Express } from "express";
 import { configDotenv } from "./utils/dotenv";
 import { Connection } from 'mysql';
-import connectDB from "./db/connection";
+import connectDB from "./db/mysql";
 import connectOrm from "./db/orm";
 import { Logger } from "./utils/logger";
 import { LEVELS } from "./types/Levels.enum";
 import appRouter from './routers/appRouter';
 import { queries } from "./db/queries";
+import { DataSource } from "typeorm";
 
 class App  {
     private port: number = 3000;
     private hostname: string = 'localhost';
     private app: Express = express();
 
-    protected db: Connection;
+    protected mysqlConnection: Connection;
+    protected dataSource: DataSource;
     private logger: Logger;
 
     // @ ** in progress properties **
@@ -25,7 +27,7 @@ class App  {
         this.assambleUtils();
         this.assembleDB();
 
-        queries.makeQuery(this.db, 'DESC COURSES');
+        // queries.makeQuery(this.db, 'DESC COURSES');
     };
 
     private assambleUtils(): void {
@@ -34,8 +36,8 @@ class App  {
     };
 
     private assembleDB(): void {
-        this.db = connectDB();
-        connectOrm();
+        // this.mysqlConnection = connectDB();
+        this.dataSource = connectOrm();
     };
 
     public run(): void {

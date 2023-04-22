@@ -10,7 +10,7 @@ function connectDB(): mysql.Connection {
 
     db.connect((err: mysql.MysqlError): void => {
         if (!err) {
-            console.log('[+] db connected');
+            console.log('[+] mysql connected');
         } else {
             console.log(`[-] ${err.message}`);
         };

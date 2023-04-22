@@ -2,7 +2,7 @@ import { DataSource } from "typeorm";
 import { Course } from "../models/course.model";
 import { Lesson } from "../models/lesson.model";
 
-function connectOrm(): void {
+function connectOrm(): DataSource {
     const dataSource: DataSource = new DataSource({
         type: 'mysql',
         port: 3306,
@@ -23,6 +23,8 @@ function connectOrm(): void {
         .catch((err: any) => {
             console.warn(`[-] ${err.message}`);
         });
+
+    return dataSource;
 };
 
 export default connectOrm;

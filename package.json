@@ -6,7 +6,7 @@
   "scripts": {
     "start": "concurrently \"tsc -w\" \"nodemon dist/app.js\"",
     "build": "tsc",
-    "clean": "rimraf dist",
+    "clear": "rimraf dist",
     "reload": "concurrently \"rimraf dist\" \"tsc\""
   },
   "author": "",
