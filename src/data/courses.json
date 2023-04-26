@@ -1,0 +1,9 @@
+{
+    "1": {
+        "title": "Typescript Bootcamp",
+        "description": "Learn in depth the Typescript language, build practical real-world projects",
+        "category": "typescript",
+        "level": "beginner",
+        "price": 50
+    }
+}
