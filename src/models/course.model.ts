@@ -1,11 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, BaseEntity } from "typeorm";
 import { Lesson } from "./lesson.model";
 
 @Entity({
     name: 'courses',
 })
 
-export class Course {
+export class Course extends BaseEntity{
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -13,16 +13,19 @@ export class Course {
     title: string;
 
     @Column()
-    description: string;
-
-    @Column()
-    author: string;
-
+    price: number;
+    
     @Column()
     category: string;
 
     @Column()
-    logoUrl: string;
+    description: string;
+
+    // @Column()
+    // author: string;
+
+    @Column()
+    level: string;
 
     @OneToMany(() => Lesson, (lesson) => lesson.course)
     lessons: Lesson[];

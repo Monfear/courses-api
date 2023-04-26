@@ -1,11 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, BaseEntity } from "typeorm";
 import { Course } from "./course.model";
 
 @Entity({
     name: 'lessons',
 })
 
-export class Lesson {
+export class Lesson extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -13,7 +13,7 @@ export class Lesson {
     title: string;
 
     @Column()
-    duration: number;
+    duration: string;
 
     @ManyToOne(() => Course, (course) => course.lessons)
     @JoinColumn({
