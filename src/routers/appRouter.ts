@@ -1,12 +1,13 @@
 import { Router } from 'express';
-import { home_get, notFound_get } from "../controllers/controller";
+import { createCourse, createLesson } from "../controllers/appController";
 
-const router: Router = Router();
 
-router.route('/')
-    .get(home_get);
+const appRouter: Router = Router();
 
-router.route('*')
-    .get(notFound_get);
+// @ create course
+appRouter.post('/course', createCourse);
 
-export default router;
+// @ create lesson connected with course
+appRouter.post('/course/:courseId/lesson', createLesson)
+
+export default appRouter;
