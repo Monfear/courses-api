@@ -2,12 +2,10 @@ import 'reflect-metadata';
 import express, { Express } from "express";
 import { configDotenv } from "./utils/dotenv";
 import { Connection } from 'mysql';
-import connectDB from "./db/mysql";
 import connectOrm from "./db/orm";
 import { Logger } from "./utils/logger";
 import { LEVELS } from "./types/Levels.enum";
 import appRouter from './routers/appRouter';
-import { queries } from "./db/queries";
 import { DataSource } from "typeorm";
 
 class App  {
@@ -26,8 +24,6 @@ class App  {
     constructor() {
         this.assambleUtils();
         this.assembleDB();
-
-        // queries.makeQuery(this.db, 'DESC COURSES');
     };
 
     private assambleUtils(): void {
@@ -36,7 +32,6 @@ class App  {
     };
 
     private assembleDB(): void {
-        // this.mysqlConnection = connectDB();
         this.dataSource = connectOrm();
     };
 
@@ -46,6 +41,7 @@ class App  {
                 this.logger.info(`[i] app is listening on ${this.hostname} at port ${this.port}`);
             });
 
+            this.arrangeMiddlewares();
             this.arrangeRouters();
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -55,8 +51,13 @@ class App  {
     };
 
     private arrangeRouters(): void {
-        this.app.use('/', appRouter);
+        this.app.use('/api', appRouter);
     };
+
+    private arrangeMiddlewares(): void {
+        this.app.use(express.json());
+        this.app.use(express.urlencoded({ extended: true }));
+    }
 
     // @ ** in progress methods **
 
