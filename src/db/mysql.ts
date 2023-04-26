@@ -1,6 +1,6 @@
 import mysql from 'mysql';
 
-function connectDB(): mysql.Connection {
+function connectMySQL(): mysql.Connection {
     const db: mysql.Connection = mysql.createConnection({
         host: process.env.DB_HOST,
         user: process.env.DB_USERNAME,
@@ -19,4 +19,4 @@ function connectDB(): mysql.Connection {
     return db;
 };
 
-export default connectDB;
+export default connectMySQL;

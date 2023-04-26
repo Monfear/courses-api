@@ -15,7 +15,7 @@ function connectOrm(): DataSource {
         synchronize: true,
         logging: true,
     });
-
+ 
     dataSource.initialize()
         .then((value: DataSource) => {
             console.log('[+] typeorm datasource initialized');
