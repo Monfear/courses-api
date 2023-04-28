@@ -100,3 +100,30 @@ export const showCourses: RequestHandler = async (req: Request, res: Response) =
         };
     };
 };
+
+export const showLessons: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const lessons: Lesson[] = await Lesson.find();
+
+        if (lessons.length < 1) {
+            return res.status(200).json({
+                success: true,
+                msg: 'No lessons in database.'
+            });
+        };
+
+        return res.status(200).json({
+            success: true,
+            numOfRecords: lessons.length,
+            data: lessons,
+        })
+
+    } catch (error) {
+        if (error instanceof Error) {
+            return res.status(500).json({
+                success: false,
+                errMsg: error.message,
+            });
+        };
+    };
+};

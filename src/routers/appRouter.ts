@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createCourse, createLesson, showCourses } from "../controllers/appController";
+import { createCourse, createLesson, showCourses, showLessons } from "../controllers/appController";
 
 
 const appRouter: Router = Router();
@@ -12,5 +12,8 @@ appRouter.post('/course/:courseId/lesson', createLesson)
 
 // @ show courses
 appRouter.get('/courses', showCourses);
+
+// @ show lessons
+appRouter.get('/lessons', showLessons);
 
 export default appRouter;
