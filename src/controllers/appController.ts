@@ -4,6 +4,7 @@ import { Course } from "../models/course.model";
 
 export const createCourse: RequestHandler = async (req: Request, res: Response) => {
     try {
+
         const { title, description, category, level, price } = req.body;
 
         const course: Course = Course.create({
@@ -17,6 +18,7 @@ export const createCourse: RequestHandler = async (req: Request, res: Response) 
         await course.save();
 
         return res.status(201).json({
+            success: true,
             msg: 'Course created',
             data: course,
         });
@@ -24,6 +26,7 @@ export const createCourse: RequestHandler = async (req: Request, res: Response) 
     } catch (error) {
         if (error instanceof Error) {
             return res.status(500).json({
+                success: false,
                 errMsg: error.message
             });
         };
@@ -40,6 +43,7 @@ export const createLesson: RequestHandler = async (req: Request, res: Response) 
 
         if (!course) {
             return res.status(404).json({
+                success: false,
                 errMsg: 'Course not found.'
             });
         };
@@ -55,6 +59,7 @@ export const createLesson: RequestHandler = async (req: Request, res: Response) 
         await lesson.save();
 
         return res.status(201).json({
+            success: true,
             msg: 'Lesson created.',
             data: lesson,
             connectedWith: course
@@ -62,6 +67,34 @@ export const createLesson: RequestHandler = async (req: Request, res: Response) 
     } catch (error) {
         if (error instanceof Error) {
             return res.status(500).json({
+                success: false,
+                errMsg: error.message,
+            });
+        };
+    };
+};
+
+export const showCourses: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const courses: Course[] = await Course.find();
+
+        if (courses.length < 1) {
+            return res.status(200).json({
+                success: true,
+                msg: 'No courses in database.'
+            });
+        };
+
+        return res.status(200).json({
+            success: true,
+            numOfRecords: courses.length,
+            data: courses,
+        });
+
+    } catch (error) {
+        if (error instanceof Error) {
+            return res.status(500).json({
+                success: false,
                 errMsg: error.message,
             });
         };
