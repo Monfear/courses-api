@@ -1,10 +1,66 @@
 import { Request, Response, RequestHandler } from "express";
 import { Lesson } from "../models/lesson.model";
 import { Course } from "../models/course.model";
+import { DeleteResult } from "typeorm";
 
+// @ get
+export const showCourses: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const courses: Course[] = await Course.find();
+
+        if (courses.length < 1) {
+            return res.status(200).json({
+                success: true,
+                msg: 'No courses in database.'
+            });
+        };
+
+        return res.status(200).json({
+            success: true,
+            numOfRecords: courses.length,
+            data: courses,
+        });
+
+    } catch (error) {
+        if (error instanceof Error) {
+            return res.status(500).json({
+                success: false,
+                errMsg: error.message,
+            });
+        };
+    };
+};
+
+export const showLessons: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const lessons: Lesson[] = await Lesson.find();
+
+        if (lessons.length < 1) {
+            return res.status(200).json({
+                success: true,
+                msg: 'No lessons in database.'
+            });
+        };
+
+        return res.status(200).json({
+            success: true,
+            numOfRecords: lessons.length,
+            data: lessons,
+        })
+
+    } catch (error) {
+        if (error instanceof Error) {
+            return res.status(500).json({
+                success: false,
+                errMsg: error.message,
+            });
+        };
+    };
+};
+
+// * post
 export const createCourse: RequestHandler = async (req: Request, res: Response) => {
     try {
-
         const { title, description, category, level, price } = req.body;
 
         const course: Course = Course.create({
@@ -74,23 +130,15 @@ export const createLesson: RequestHandler = async (req: Request, res: Response) 
     };
 };
 
-export const showCourses: RequestHandler = async (req: Request, res: Response) => {
+// ! delete
+export const deleteCourses: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const courses: Course[] = await Course.find();
+        const result: DeleteResult = await Course.delete({});
 
-        if (courses.length < 1) {
-            return res.status(200).json({
-                success: true,
-                msg: 'No courses in database.'
-            });
-        };
-
-        return res.status(200).json({
+        res.status(200).json({
             success: true,
-            numOfRecords: courses.length,
-            data: courses,
+            msg: result,
         });
-
     } catch (error) {
         if (error instanceof Error) {
             return res.status(500).json({
@@ -101,23 +149,14 @@ export const showCourses: RequestHandler = async (req: Request, res: Response) =
     };
 };
 
-export const showLessons: RequestHandler = async (req: Request, res: Response) => {
+export const deleteLessons: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const lessons: Lesson[] = await Lesson.find();
+        const result: DeleteResult = await Lesson.delete({});
 
-        if (lessons.length < 1) {
-            return res.status(200).json({
-                success: true,
-                msg: 'No lessons in database.'
-            });
-        };
-
-        return res.status(200).json({
+        res.status(200).json({
             success: true,
-            numOfRecords: lessons.length,
-            data: lessons,
-        })
-
+            msg: result,
+        });
     } catch (error) {
         if (error instanceof Error) {
             return res.status(500).json({

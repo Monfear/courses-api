@@ -27,7 +27,7 @@ class App  {
     };
 
     private assambleUtils(): void {
-        configDotenv();
+        // configDotenv();
         this.logger = new Logger(LEVELS.INFO);
     };
 
