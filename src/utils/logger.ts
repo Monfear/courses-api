@@ -40,4 +40,8 @@ export class Logger {
      public info(message: string): void {
         this.logger.info(message);
     };
+
+    public debug(message: string): void {
+        this.logger.debug(message);
+    };
 };
