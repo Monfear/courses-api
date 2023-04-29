@@ -5,7 +5,9 @@ import { Connection } from 'mysql';
 import connectOrm from "./db/orm";
 import { Logger } from "./utils/logger";
 import { LEVELS } from "./types/Levels.enum";
-import appRouter from './routers/appRouter';
+// import appRouter from './routers/appRouter';
+import coursesRouter from "./routers/courses.router";
+import lessonsRouter from "./routers/lessons.router";
 import { DataSource } from "typeorm";
 
 class App  {
@@ -13,8 +15,6 @@ class App  {
     private hostname: string = 'localhost';
     private app: Express = express();
 
-    protected mysqlConnection: Connection;
-    protected dataSource: DataSource;
     private logger: Logger;
 
     // @ ** in progress properties **
@@ -27,12 +27,11 @@ class App  {
     };
 
     private assambleUtils(): void {
-        // configDotenv();
         this.logger = new Logger(LEVELS.INFO);
     };
 
     private assembleDB(): void {
-        this.dataSource = connectOrm();
+        connectOrm();
     };
 
     public run(): void {
@@ -51,7 +50,8 @@ class App  {
     };
 
     private arrangeRouters(): void {
-        this.app.use('/api', appRouter);
+        this.app.use('/api', coursesRouter);
+        this.app.use('/api', lessonsRouter);
     };
 
     private arrangeMiddlewares(): void {

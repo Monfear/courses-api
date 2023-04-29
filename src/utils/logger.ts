@@ -36,7 +36,7 @@ export class Logger {
         };
     };
 
-    public info(message: string): void {
+     public info(message: string): void {
         this.logger.info(message);
     };
 };
