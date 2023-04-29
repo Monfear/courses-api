@@ -3,6 +3,104 @@
         "1": {
             "title": "Setting Up the Development Environment",
             "duration": "0:44"
+        },
+        "2": {
+            "title": "Why Typescript? Key Benefits of the Language",
+            "duration": "15:24"
+        },
+        "3": {
+            "title": "Compiling Your First Typescript Program",
+            "duration": "8:31"
+        },
+        "4": {
+            "title": "Running a Typescript Program in a Browser",
+            "duration": "20:02"
+        },
+        "5": {
+            "title": "Typescript primitive types - numbers, strings and booleans",
+            "duration": "14:45"
+        },
+        "6": {
+            "title": "Understanding Type Inference",
+            "duration": "18:45"
+        },
+        "7": {
+            "title": "When to use Typescript Type Annotations and Why",
+            "duration": "9:44"
+        }
+    },
+
+    "Angular Material Course": {
+        "1": {
+            "title": "Introduction to Angular Material",
+            "duration": "4:45"
+        },
+        "2": {
+            "title": "Navigation and Containers",
+            "duration": "6:22"
+        },
+        "3": {
+            "title": "Data Tables",
+            "duration": "10:28"
+        },
+        "4": {
+            "title": "Dialogs",
+            "duration": "7:18"
+        },
+        "5": {
+            "title": "Commonly used Form Controls",
+            "duration": "11:32"
+        },
+        "6": {
+            "title": "Drag and Drop",
+            "duration": "8:33"
+        },
+        "7": {
+            "title": "Responsive Design",
+            "duration": "18:22"
+        },
+        "8": {
+            "title": "Tree Component",
+            "duration": "7:44"
+        },
+        "9": {
+            "title": "Virtual Scrolling",
+            "duration": "15:48"
+        }
+    },
+    
+    "Angular Testing Course": {
+        "1": {
+            "title": "Angular Testing Course - Helicopter View",
+            "duration": "14:45"
+        },
+        "2": {
+            "title": "Setting Up the Development Environment",
+            "duration": "10:45"
+        },
+        "3": {
+            "title": "Introduction to Jasmine, Spies and specs",
+            "duration": "5:47"
+        },
+        "4": {
+            "title": "Introduction to Service Testing",
+            "duration": "7:22"
+        },
+        "5": {
+            "title": "Settting up the Angular TestBed",
+            "duration": "11:45"
+        },
+        "6": {
+            "title": "Mocking Angular HTTP requests",
+            "duration": "21:30"
+        },
+        "7": {
+            "title": "Simulating Failing HTTP Requests",
+            "duration": "15:12"
+        },
+        "8": {
+            "title": "Introduction to Angular Component Testing",
+            "duration": "19:52"
         }
     }
 }
