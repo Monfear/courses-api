@@ -1,14 +1,10 @@
 import 'reflect-metadata';
 import express, { Express } from "express";
-import { configDotenv } from "./utils/dotenv";
-import { Connection } from 'mysql';
 import connectOrm from "./db/orm";
 import { Logger } from "./utils/logger";
 import { LEVELS } from "./types/Levels.enum";
-// import appRouter from './routers/appRouter';
 import coursesRouter from "./routers/courses.router";
 import lessonsRouter from "./routers/lessons.router";
-import { DataSource } from "typeorm";
 
 class App  {
     private port: number = 3000;
