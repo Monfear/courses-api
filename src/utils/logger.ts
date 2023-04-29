@@ -1,5 +1,6 @@
 import winston from 'winston';
 import { Level } from "../types/Level.type";
+import { MODES } from "../types/Modes.enum";
 
 export class Logger {
     private logger: winston.Logger;
@@ -29,7 +30,7 @@ export class Logger {
     private checkMode(): void {
         console.log(`[i] current mode: ${process.env.NODE_ENV}`);
 
-        if (process.env.NODE_ENV !== 'PRODUCTION') {
+        if (process.env.NODE_ENV !== MODES.PRODUCTION) {
             this.logger.add(new winston.transports.Console({
                 format: winston.format.simple(),
             }));

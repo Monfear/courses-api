@@ -1,0 +1,4 @@
+export enum MODES {
+    PRODUCTION = 'PRODUCTION',
+    DEVELOPMENT = 'DEVELOPMENT',
+};
