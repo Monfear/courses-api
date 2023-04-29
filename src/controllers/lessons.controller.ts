@@ -2,11 +2,18 @@ import { Request, Response, RequestHandler } from "express";
 import { Lesson } from "../models/lesson.model";
 import { Course } from "../models/course.model";
 import { DeleteResult } from "typeorm";
+import { dataSource } from "../db/orm";
 
 // @ GET
 export const showLessons: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const lessons: Lesson[] = await Lesson.find();
+        // const lessons: Lesson[] = await Lesson.find();
+
+        const lessons: Lesson[] = await dataSource
+            .getRepository(Lesson)
+            .createQueryBuilder('lessons')
+            .orderBy('lessons.id', 'ASC')
+            .getMany();
 
         if (lessons.length < 1) {
             return res.status(200).json({
@@ -19,7 +26,7 @@ export const showLessons: RequestHandler = async (req: Request, res: Response) =
             success: true,
             numOfRecords: lessons.length,
             data: lessons,
-        })
+        });
 
     } catch (error) {
         if (error instanceof Error) {

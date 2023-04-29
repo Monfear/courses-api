@@ -1,11 +1,25 @@
 import { Request, Response, RequestHandler } from "express";
 import { Course } from "../models/course.model";
 import { DeleteResult } from "typeorm";
+import { dataSource } from "../db/orm";
+import { Logger } from "../utils/logger";
+import { LEVELS } from "../types/Levels.enum";
+
+const logger = new Logger(LEVELS.DEBUG);
 
 // @ GET
 export const showCourses: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const courses: Course[] = await Course.find();
+        logger.debug('showCourses() has invoken');
+
+        // const courses: Course[] = await Course.find();
+
+        const courses: Course[] = await dataSource
+            .getRepository(Course)
+            .createQueryBuilder('course')
+            .orderBy('course.id', 'ASC')
+            .leftJoinAndSelect('course.lessons', 'lessons')
+            .getMany();
 
         if (courses.length < 1) {
             return res.status(200).json({
