@@ -5,6 +5,7 @@ import { Logger } from "./utils/logger";
 import { LEVELS } from "./types/Levels.enum";
 import coursesRouter from "./routers/courses.router";
 import lessonsRouter from "./routers/lessons.router";
+import { showRequestInfo } from "./middlewares/showRequestInfo";
 
 class App  {
     private port: number = 3000;
@@ -46,13 +47,14 @@ class App  {
     };
 
     private arrangeRouters(): void {
-        this.app.use('/api', coursesRouter);
-        this.app.use('/api', lessonsRouter);
+        this.app.use('/api', coursesRouter, lessonsRouter);
+        // this.app.use('/api', lessonsRouter);
     };
 
     private arrangeMiddlewares(): void {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
+        this.app.use(showRequestInfo);
     }
 
     // @ ** in progress methods **
