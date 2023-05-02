@@ -2,16 +2,10 @@ import { Request, Response, RequestHandler } from "express";
 import { Course } from "../models/course.model";
 import { DeleteResult } from "typeorm";
 import { dataSource } from "../db/orm";
-import { Logger } from "../utils/logger";
-import { LEVELS } from "../types/Levels.enum";
-
-const logger = new Logger(LEVELS.DEBUG);
 
 // @ GET
 export const showCourses: RequestHandler = async (req: Request, res: Response) => {
     try {
-        logger.debug('showCourses() has invoken');
-
         // const courses: Course[] = await Course.find();
 
         const courses: Course[] = await dataSource
@@ -39,6 +33,36 @@ export const showCourses: RequestHandler = async (req: Request, res: Response) =
             return res.status(500).json({
                 success: false,
                 errMsg: error.message,
+            });
+        };
+    };
+};
+
+export const showCourse: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const id: number = parseInt(req.params.id);
+
+        const course: Course | null = await Course.findOneBy({
+            id,
+        });
+
+        if (!course) {
+            return res.status(200).json({
+                success: true,
+                msg: 'Course does not exist.'
+            });
+        };
+
+        return res.status(200).json({
+            success: true,
+            query: req.query,
+            data: course,
+        })
+    } catch (error) {
+        if (error instanceof Error) {
+            return res.status(500).json({
+                success: false,
+                errMsg: error.message
             });
         };
     };
