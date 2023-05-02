@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import express, { Express } from "express";
+import cors from 'cors';
 import connectOrm from "./db/orm";
 import { Logger } from "./utils/logger";
 import { LEVELS } from "./types/Levels.enum";
@@ -54,6 +55,9 @@ class App  {
     private arrangeMiddlewares(): void {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
+        this.app.use(cors({
+            origin: true,
+        }));
         this.app.use(showRequestInfo);
     }
 
