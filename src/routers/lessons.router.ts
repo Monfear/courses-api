@@ -4,8 +4,8 @@ import { createLesson, deleteLessons, showLessons } from "../controllers/lessons
 const lessonsRouter: Router = Router();
 
 lessonsRouter
-    .get('/lessons', showLessons)
-    .post('/lessons/courses/:courseId', createLesson)
-    .delete('/lessons', deleteLessons)
+    .get('/', showLessons)
+    .post('/courses/:courseId', createLesson)
+    .delete('/', deleteLessons)
 
 export default lessonsRouter;

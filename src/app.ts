@@ -48,8 +48,8 @@ class App  {
     };
 
     private arrangeRouters(): void {
-        this.app.use('/api', coursesRouter, lessonsRouter);
-        // this.app.use('/api', lessonsRouter);
+        this.app.use('/api/courses', coursesRouter);
+        this.app.use('/api/lessons', lessonsRouter);
     };
 
     private arrangeMiddlewares(): void {

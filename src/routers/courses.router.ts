@@ -4,9 +4,9 @@ import { createCourse, deleteCourses, showCourse, showCourses } from "../control
 const coursesRouter: Router = Router();
 
 coursesRouter
-    .get('/courses', showCourses)
-    .get('/course/:id', showCourse)
-    .post('/courses', createCourse)
-    .delete('/courses', deleteCourses)
+    .get('/', showCourses)
+    .get('/:id', showCourse)
+    .post('/', createCourse)
+    .delete('/', deleteCourses)
 
 export default coursesRouter;
