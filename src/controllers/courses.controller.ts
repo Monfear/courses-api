@@ -2,6 +2,7 @@ import { Request, Response, RequestHandler } from "express";
 import { Course } from "../models/course.model";
 import { DeleteResult } from "typeorm";
 import { dataSource } from "../db/orm";
+import { Lesson } from "../models/lesson.model";
 
 // @ GET
 export const showCourses: RequestHandler = async (req: Request, res: Response) => {
@@ -53,10 +54,17 @@ export const showCourse: RequestHandler = async (req: Request, res: Response) =>
             });
         };
 
+        const lessons: number = await dataSource
+            .getRepository(Lesson)
+            .createQueryBuilder('lesson')
+            .where('lesson.course_id = :course_id', { course_id: course.id })
+            .getCount();
+
         return res.status(200).json({
             success: true,
             query: req.query,
             data: course,
+            numberOfLessons: lessons
         })
     } catch (error) {
         if (error instanceof Error) {
