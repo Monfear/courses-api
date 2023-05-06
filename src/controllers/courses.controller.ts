@@ -3,6 +3,7 @@ import { Course } from "../models/course.model";
 import { DeleteResult } from "typeorm";
 import { dataSource } from "../db/orm";
 import { Lesson } from "../models/lesson.model";
+import { ICourse } from "../types/Course.interface";
 
 // @ GET
 export const showCourses: RequestHandler = async (req: Request, res: Response) => {
@@ -65,7 +66,7 @@ export const showCourse: RequestHandler = async (req: Request, res: Response) =>
             query: req.query,
             data: course,
             numberOfLessons: lessons
-        })
+        });
     } catch (error) {
         if (error instanceof Error) {
             return res.status(500).json({
@@ -107,14 +108,45 @@ export const createCourse: RequestHandler = async (req: Request, res: Response) 
     };
 };
 
+// ? PATCH
+export const editCourse: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const id: number = parseInt(req.params.id);
+
+        const updatedCourse: ICourse = req.body;
+
+        const result = await dataSource
+            .createQueryBuilder()
+            .update(Course)
+            .set(updatedCourse)
+            .where('id = :courseId', { courseId: id })
+            .execute();
+
+        return res.status(200).json({
+            success: true,
+            msg: 'Course updated.',
+            updatedData: updatedCourse,
+            info: result
+        });
+    } catch (error) {
+        if (error instanceof Error) {
+            return res.status(500).json({
+                success: false,
+                errMsg: error.message
+            });
+        };
+    };
+};
+
 // ! DELETE
-export const deleteCourses: RequestHandler = async (req: Request, res: Response) => {
+export const clearCourses: RequestHandler = async (req: Request, res: Response) => {
     try {
         const result: DeleteResult = await Course.delete({});
 
         res.status(200).json({
             success: true,
-            msg: result,
+            msg: 'Course deleted.',
+            info: result,
         });
     } catch (error) {
         if (error instanceof Error) {
