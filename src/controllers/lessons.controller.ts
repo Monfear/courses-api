@@ -9,10 +9,17 @@ export const showLessons: RequestHandler = async (req: Request, res: Response) =
     try {
         // const lessons: Lesson[] = await Lesson.find();
 
+       const pageSize: number = Number(req.query.pageSize);
+       const pageNumber: number = Number(req.query.pageNumber);
+
+       console.log(pageSize, pageNumber)
+
         const lessons: Lesson[] = await dataSource
             .getRepository(Lesson)
             .createQueryBuilder('lessons')
             .orderBy('lessons.id', 'ASC')
+            .limit(pageSize || 0)
+            .offset(pageSize * (pageNumber - 1) || 0)
             .getMany();
 
         if (lessons.length < 1) {
@@ -81,7 +88,7 @@ export const createLesson: RequestHandler = async (req: Request, res: Response) 
 };
 
 // ! DELETE
-export const deleteLessons: RequestHandler = async (req: Request, res: Response) => {
+export const clearLessons: RequestHandler = async (req: Request, res: Response) => {
     try {
         const result: DeleteResult = await Lesson.delete({});
 
