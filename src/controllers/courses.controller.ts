@@ -1,6 +1,6 @@
 import { Request, Response, RequestHandler } from "express";
 import { Course } from "../models/course.model";
-import { DeleteResult } from "typeorm";
+import { DeleteResult, UpdateResult } from "typeorm";
 import { dataSource } from "../db/orm";
 import { Lesson } from "../models/lesson.model";
 import { ICourse } from "../types/Course.interface";
@@ -115,7 +115,7 @@ export const editCourse: RequestHandler = async (req: Request, res: Response) =>
 
         const updatedCourse: ICourse = req.body;
 
-        const result = await dataSource
+        const result: UpdateResult = await dataSource
             .createQueryBuilder()
             .update(Course)
             .set(updatedCourse)

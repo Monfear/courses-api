@@ -1,8 +1,9 @@
 import { Request, Response, RequestHandler } from "express";
 import { Lesson } from "../models/lesson.model";
 import { Course } from "../models/course.model";
-import { DeleteResult } from "typeorm";
+import { DeleteResult, UpdateResult } from "typeorm";
 import { dataSource } from "../db/orm";
+import { ILesson } from "../types/Lesson.interface";
 
 // @ GET
 export const showLessons: RequestHandler = async (req: Request, res: Response) => {
@@ -82,6 +83,37 @@ export const createLesson: RequestHandler = async (req: Request, res: Response) 
             return res.status(500).json({
                 success: false,
                 errMsg: error.message,
+            });
+        };
+    };
+};
+
+// ? PATCH
+export const editLesson: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const id: number = parseInt(req.params.id);
+
+        const updatedLesson: ILesson = req.body;
+
+        const result: UpdateResult = await dataSource
+            .createQueryBuilder()
+            .update(Lesson)
+            .set(updatedLesson)
+            .where('id = :lessonId', { lessonId: id })
+            .execute();
+
+        return res.status(200).json({
+            success: true,
+            msg: 'Course updated.',
+            updatedData: updatedLesson,
+            info: result,
+        });
+
+    } catch (error) {
+        if (error instanceof Error) {
+            return res.status(500).json({
+                success: false,
+                errMsg: error.message
             });
         };
     };
