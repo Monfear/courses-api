@@ -7,6 +7,7 @@ import { LEVELS } from "./types/Levels.enum";
 import coursesRouter from "./routers/courses.router";
 import lessonsRouter from "./routers/lessons.router";
 import { showRequestInfo } from "./middlewares/showRequestInfo";
+import usersRouter from "./routers/users.router";
 
 class App  {
     private port: number = 3000;
@@ -42,7 +43,7 @@ class App  {
             this.arrangeRouters();
         } catch (error: unknown) {
             if (error instanceof Error) {
-                console.warn(`[-] ${error.message}`);
+                console.warn(`[!] ${error.message}`);
             };
         };
     };
@@ -50,6 +51,7 @@ class App  {
     private arrangeRouters(): void {
         this.app.use('/api/courses', coursesRouter);
         this.app.use('/api/lessons', lessonsRouter);
+        this.app.use('/api/users', usersRouter);
     };
 
     private arrangeMiddlewares(): void {
