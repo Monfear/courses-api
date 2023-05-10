@@ -2,6 +2,7 @@ import { configDotenv } from "../utils/dotenv";
 import { DataSource } from "typeorm";
 import { Course } from "../models/course.model";
 import { Lesson } from "../models/lesson.model";
+import { User } from "../models/user.model";
 
 configDotenv();
 
@@ -13,7 +14,7 @@ export const dataSource: DataSource = new DataSource({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     ssl: true,
-    entities: [Course, Lesson],
+    entities: [Course, Lesson, User],
     synchronize: true,
     logging: true,
 });
