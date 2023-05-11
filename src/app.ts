@@ -8,6 +8,7 @@ import coursesRouter from "./routers/courses.router";
 import lessonsRouter from "./routers/lessons.router";
 import { showRequestInfo } from "./middlewares/showRequestInfo";
 import usersRouter from "./routers/users.router";
+import authRouter from "./routers/auth.router";
 
 class App  {
     private port: number = 3000;
@@ -52,6 +53,7 @@ class App  {
         this.app.use('/api/courses', coursesRouter);
         this.app.use('/api/lessons', lessonsRouter);
         this.app.use('/api/users', usersRouter);
+        this.app.use('/api/auth', authRouter);
     };
 
     private arrangeMiddlewares(): void {
