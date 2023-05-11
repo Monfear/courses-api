@@ -1,9 +1,14 @@
 import crypto from 'crypto';
 import util from 'util';
 
-export const hashPassword = util.promisify(crypto.pbkdf2);
+export async function hashPassword (password: string, salt: string): Promise<string> {
+    const pbkdf2Modified = util.promisify(crypto.pbkdf2);
 
-// crypto.pbkdf2( password, salt, iterations, keylen, digest, callback )
-// crypto.pbkdf2(plainTextPassword, passwordSalt, 1000, 64, 'sha512', function (err, hash) {
+    const passwordBuffer: Buffer = await pbkdf2Modified(password, salt, 1000, 64, 'sha512');
+    const passwordHash: string = passwordBuffer.toString('hex');
 
-// });
+    return passwordHash;
+};
+
+// crypto.pbkdf2(password, salt, iterations, keylen, digest, callback);
+
