@@ -4,6 +4,7 @@ import { IUser } from "../types/User.interface";
 import { hashPassword } from "../functions/hashPassword";
 import { dataSource } from "../db/orm";
 import { Repository } from "typeorm";
+import { generatePasswordSalt } from "../functions/generatePasswordSalt";
 
 // @ GET
 export const showAllUsers: RequestHandler = async (req: Request, res: Response) => {
@@ -37,7 +38,7 @@ export const showAllUsers: RequestHandler = async (req: Request, res: Response) 
 export const createUser: RequestHandler = async (req: Request, res: Response) => {
     try {
         const userData: IUser = req.body;
-        const { name, email, plainTextPassword, passwordSalt, isAdmin } = userData;
+        const { name, email, plainTextPassword, isAdmin } = userData;
 
         const repoUser: Repository<User> = dataSource.getRepository(User);
 
@@ -55,13 +56,12 @@ export const createUser: RequestHandler = async (req: Request, res: Response) =>
         if (trackedUser) {
             return res.status(200).json({
                 success: true,
-                msg: 'User with provided name or email already exists.'
+                msg: 'User with provided name or email already exists.',
             });
         };
 
-        let passwordHash: string | undefined = undefined;
-
-        passwordHash = await hashPassword(plainTextPassword, passwordSalt);
+        const passwordSalt: string = generatePasswordSalt();
+        const passwordHash = await hashPassword(plainTextPassword, passwordSalt);
 
         const user: User = User.create({
             name,
@@ -76,7 +76,11 @@ export const createUser: RequestHandler = async (req: Request, res: Response) =>
         return res.status(201).json({
             success: true,
             msg: 'User created.',
-            data: passwordHash,
+            data: {
+                name,
+                email,
+                isAdmin
+            },
         });
     } catch (error) {
         if (error instanceof Error) {
