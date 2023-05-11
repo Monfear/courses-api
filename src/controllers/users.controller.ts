@@ -2,7 +2,8 @@ import { Request, Response, RequestHandler } from "express";
 import { User } from "../models/user.model";
 import { IUser } from "../types/User.interface";
 import { hashPassword } from "../functions/hashPassword";
-
+import { dataSource } from "../db/orm";
+import { Repository } from "typeorm";
 
 // @ GET
 export const showAllUsers: RequestHandler = async (req: Request, res: Response) => {
@@ -38,6 +39,26 @@ export const createUser: RequestHandler = async (req: Request, res: Response) =>
         const userData: IUser = req.body;
         const { name, email, plainTextPassword, passwordSalt, isAdmin } = userData;
 
+        const repoUser: Repository<User> = dataSource.getRepository(User);
+
+        const trackedUser: User | null = await repoUser.createQueryBuilder('user')
+            .where('name = :name OR email = :email', { name, email })
+            .getOne();
+
+        // const trackedUser: User | null = await repoUser.findOne({
+        //     where: [
+        //         { name: name },
+        //         { email: email }
+        //     ],
+        // });
+
+        if (trackedUser) {
+            return res.status(200).json({
+                success: true,
+                msg: 'User with provided name or email already exists.'
+            });
+        };
+
         let passwordHash: string | undefined = undefined;
 
         passwordHash = await hashPassword(plainTextPassword, passwordSalt);
@@ -52,16 +73,10 @@ export const createUser: RequestHandler = async (req: Request, res: Response) =>
 
         await user.save();
 
-        console.log({
-            success: true,
-            msg: 'User created.',
-            data: user
-        })
-
         return res.status(201).json({
             success: true,
             msg: 'User created.',
-            data: passwordHash
+            data: passwordHash,
         });
     } catch (error) {
         if (error instanceof Error) {
