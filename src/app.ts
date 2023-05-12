@@ -3,7 +3,6 @@ import express, { Express } from "express";
 import cors from 'cors';
 import connectOrm from "./db/orm";
 import { Logger } from "./utils/logger";
-import { LEVELS } from "./types/Levels.enum";
 import coursesRouter from "./routers/courses.router";
 import lessonsRouter from "./routers/lessons.router";
 import { showRequestInfo } from "./middlewares/showRequestInfo";
@@ -27,7 +26,7 @@ class App  {
     };
 
     private assambleUtils(): void {
-        this.logger = new Logger(LEVELS.INFO);
+        this.logger = new Logger();
     };
 
     private assembleDB(): void {

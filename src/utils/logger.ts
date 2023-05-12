@@ -5,14 +5,14 @@ import { MODES } from "../types/Modes.enum";
 export class Logger {
     private logger: winston.Logger;
 
-    constructor(private level: Level) {
+    constructor() {
         this.create();
         this.checkMode();
     };
 
     private create(): void {
         this.logger = winston.createLogger({
-            level: this.level,
+            level: process.env.LOGGER_LEVEL,
             format: winston.format.json({
                 space: 4,
             }),
