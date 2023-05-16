@@ -1,11 +1,10 @@
 import winston from 'winston';
-import { Level } from "../types/Level.type";
 import { MODES } from "../types/Modes.enum";
 
 export class Logger {
     private logger: winston.Logger;
 
-    constructor() {
+    constructor(private fileName: string) {
         this.create();
         this.checkMode();
     };
@@ -28,7 +27,9 @@ export class Logger {
     };
 
     private checkMode(): void {
-        console.log(`[i] current mode: ${process.env.NODE_ENV}`);
+        if (!process.env.NODE_ENV) {
+            console.warn(`[!] No logger mode detected in >> ${this.fileName}.`)
+        };
 
         if (process.env.NODE_ENV !== MODES.PRODUCTION) {
             this.logger.add(new winston.transports.Console({
