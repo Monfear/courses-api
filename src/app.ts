@@ -8,8 +8,11 @@ import lessonsRouter from "./routers/lessons.router";
 import { showRequestInfo } from "./middlewares/showRequestInfo";
 import usersRouter from "./routers/users.router";
 import authRouter from "./routers/auth.router";
+import { configDotenv } from "./utils/dotenv";
+import { validateUser } from "./middlewares/validateUser.middleware";
 
-class App  {
+
+class App {
     private port: number = 3000;
     private hostname: string = 'localhost';
     private app: Express = express();
@@ -21,12 +24,14 @@ class App  {
     // @ **
 
     constructor() {
+        configDotenv('app.ts');
+
         this.assambleUtils();
         this.assembleDB();
     };
 
     private assambleUtils(): void {
-        this.logger = new Logger();
+        this.logger = new Logger('app.ts');
     };
 
     private assembleDB(): void {
@@ -62,6 +67,10 @@ class App  {
             origin: true,
         }));
         this.app.use(showRequestInfo);
+
+        this.app.use('/api/courses', validateUser);
+        this.app.use('/api/lessons', validateUser);
+        this.app.use('/api/users', validateUser);
     }
 
     // @ ** in progress methods **

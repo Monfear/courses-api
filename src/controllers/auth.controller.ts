@@ -3,8 +3,17 @@ import { ILogin } from "../types/Login.interface";
 import { User } from "../models/user.model";
 import { hashPassword } from "../functions/hashPassword";
 import { Logger } from "../utils/logger";
+import { JwtPayload, sign } from 'jsonwebtoken';
+import { IPayloadJWT } from "../types/Payload.interface";
+// import { IPayloadJWT } from "../types/PayloadJWT.interface"; 
 
-const logger: Logger = new Logger();
+const JWT_KEY: string | undefined = process.env.JWT_KEY;
+
+if (!JWT_KEY) {
+    console.warn('[!] No JWT key.');
+};
+
+const logger: Logger = new Logger('auth.controller.ts');
 
 export const login: RequestHandler = async (req: Request, res: Response) => {
     try {
@@ -38,15 +47,30 @@ export const login: RequestHandler = async (req: Request, res: Response) => {
             });
         };
 
+        const payloadJWT: JwtPayload & IPayloadJWT = {
+            userId: user.id,
+            userName: user.name,
+            isAdmin: user.isAdmin
+        };
+
+        if (!JWT_KEY) {
+            throw new Error('No JWT key.');
+        };
+
+        const token: string | undefined = sign(payloadJWT, JWT_KEY, {
+            algorithm: 'HS256',
+            expiresIn: '30d'
+        });
+
         return res.status(200).json({
             success: true,
             data: {
                 name: user.name,
                 email: user.email,
-                isAdmin: user.isAdmin
+                isAdmin: user.isAdmin,
             },
+            token
         });
-
     } catch (error) {
         if (error instanceof Error) {
             return res.status(500).json({

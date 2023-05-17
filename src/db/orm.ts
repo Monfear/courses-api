@@ -4,7 +4,7 @@ import { Course } from "../models/course.model";
 import { Lesson } from "../models/lesson.model";
 import { User } from "../models/user.model";
 
-configDotenv();
+configDotenv('orm.ts');
 
 export const dataSource: DataSource = new DataSource({
     type: 'mysql',

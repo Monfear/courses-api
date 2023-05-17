@@ -1,7 +1,4 @@
 import { Connection, MysqlError, createConnection } from 'mysql';
-import { configDotenv } from "../utils/dotenv";
-
-configDotenv();
 
 export function connectMySQL(): Connection {
     const db: Connection = createConnection({
