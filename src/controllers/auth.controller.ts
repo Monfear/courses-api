@@ -5,7 +5,6 @@ import { hashPassword } from "../functions/hashPassword";
 import { Logger } from "../utils/logger";
 import { JwtPayload, sign } from 'jsonwebtoken';
 import { IPayloadJWT } from "../types/Payload.interface";
-// import { IPayloadJWT } from "../types/PayloadJWT.interface"; 
 
 const JWT_KEY: string | undefined = process.env.JWT_KEY;
 

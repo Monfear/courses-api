@@ -104,7 +104,7 @@ export const editLesson: RequestHandler = async (req: Request, res: Response) =>
 
         return res.status(200).json({
             success: true,
-            msg: 'Course updated.',
+            msg: 'Lesson updated.',
             updatedData: updatedLesson,
             info: result,
         });

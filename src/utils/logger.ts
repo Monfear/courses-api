@@ -1,6 +1,12 @@
 import winston from 'winston';
 import { MODES } from "../types/Modes.enum";
 
+const CURRENT_MODE = process.env.NODE_ENV;
+
+if (!CURRENT_MODE) {
+    console.warn('No current mode in env.');
+};
+
 export class Logger {
     private logger: winston.Logger;
 
@@ -27,22 +33,26 @@ export class Logger {
     };
 
     private checkMode(): void {
-        if (!process.env.NODE_ENV) {
-            console.warn(`[!] No logger mode detected in >> ${this.fileName}.`)
+        if (!CURRENT_MODE) {
+            console.warn(`[!] No logger mode detected in >> ${this.fileName}.`);
         };
 
-        if (process.env.NODE_ENV !== MODES.PRODUCTION) {
+        if (CURRENT_MODE !== MODES.PRODUCTION) {
             this.logger.add(new winston.transports.Console({
                 format: winston.format.simple(),
             }));
         };
     };
 
-     public info(message: string): void {
+    public info(message: string): void {
         this.logger.info(message);
     };
 
     public debug(message: string): void {
         this.logger.debug(message);
     };
+
+    public error(message: string): void {
+        this.logger.error(message);
+    }
 };

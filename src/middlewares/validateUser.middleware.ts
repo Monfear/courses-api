@@ -34,14 +34,22 @@ export function validateUser(req: Request, res: Response, next: NextFunction) {
 
     try {
         decodedToken = verify(token, JWT_KEY) as JwtPayload & IPayloadJWT;
+
         logger.info(`User: ${decodedToken.userName} succesfully decoded.`);
     } catch (error) {
         if (error instanceof Error) {
             return res.status(403).json({
                 success: false,
                 errMsg: error.message
-            })
+            });
         };
+    };
+
+    if (req.method !== 'GET' && !decodedToken?.isAdmin) {
+        return res.status(403).json({
+            success: false,
+            errMsg: 'You don\'t have permission to perform this action.'
+        });
     };
 
     next();
