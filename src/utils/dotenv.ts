@@ -11,7 +11,7 @@ export function configDotenv(fileName: string): void {
         console.log(`[+] dotenv configuration correct in >> ${fileName}`)
     } catch (error: unknown) {
         if (error instanceof Error) {
-            console.warn(`[!] ${error.message}`);
+            console.warn(`[-] ${error.message}`);
         };
     };
 };

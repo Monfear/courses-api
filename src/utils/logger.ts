@@ -1,10 +1,15 @@
 import winston from 'winston';
 import { MODES } from "../types/Modes.enum";
 
-const CURRENT_MODE = process.env.NODE_ENV;
+const NODE_ENV = process.env.NODE_ENV;
+const LOGGER_LEVEL = process.env.LOGGER_LEVEL;
 
-if (!CURRENT_MODE) {
-    console.warn('No current mode in env.');
+if (!NODE_ENV) {
+    console.warn('[!] No current node env mode in env.');
+};
+
+if (!LOGGER_LEVEL) {
+    console.warn('[!] No logger level in env.')
 };
 
 export class Logger {
@@ -17,7 +22,7 @@ export class Logger {
 
     private create(): void {
         this.logger = winston.createLogger({
-            level: process.env.LOGGER_LEVEL,
+            level: LOGGER_LEVEL,
             format: winston.format.json({
                 space: 4,
             }),
@@ -33,11 +38,11 @@ export class Logger {
     };
 
     private checkMode(): void {
-        if (!CURRENT_MODE) {
+        if (!NODE_ENV) {
             console.warn(`[!] No logger mode detected in >> ${this.fileName}.`);
         };
 
-        if (CURRENT_MODE !== MODES.PRODUCTION) {
+        if (NODE_ENV !== MODES.PRODUCTION) {
             this.logger.add(new winston.transports.Console({
                 format: winston.format.simple(),
             }));
@@ -54,5 +59,5 @@ export class Logger {
 
     public error(message: string): void {
         this.logger.error(message);
-    }
+    };
 };

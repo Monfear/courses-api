@@ -14,7 +14,7 @@ export class Course extends BaseEntity{
 
     @Column()
     price: number;
-    
+
     @Column()
     category: string;
 

@@ -11,17 +11,12 @@ import authRouter from "./routers/auth.router";
 import { configDotenv } from "./utils/dotenv";
 import { validateUser } from "./middlewares/validateUser.middleware";
 
-
 class App {
     private port: number = 3000;
     private hostname: string = 'localhost';
     private app: Express = express();
 
     private logger: Logger;
-
-    // @ ** in progress properties **
-
-    // @ **
 
     constructor() {
         configDotenv('app.ts');
@@ -72,10 +67,6 @@ class App {
         this.app.use('/api/lessons', validateUser);
         this.app.use('/api/users', validateUser);
     }
-
-    // @ ** in progress methods **
-
-    // @ **
 };
 
 (function startApp(): void {
