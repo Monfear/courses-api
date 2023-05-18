@@ -68,7 +68,7 @@ export const login: RequestHandler = async (req: Request, res: Response) => {
                 email: user.email,
                 isAdmin: user.isAdmin,
             },
-            token
+            token,
         });
     } catch (error) {
         if (error instanceof Error) {

@@ -3,10 +3,10 @@ import { User } from "../models/user.model";
 import { IUser } from "../types/User.interface";
 import { hashPassword } from "../functions/hashPassword";
 import { dataSource } from "../db/orm";
-import { Repository } from "typeorm";
+import { Repository, UpdateResult } from "typeorm";
 import { generatePasswordSalt } from "../functions/generatePasswordSalt";
 
-// @ GET
+// @ GET ALL
 export const showAllUsers: RequestHandler = async (req: Request, res: Response) => {
     try {
         const users: User[] = await User.find();
@@ -23,7 +23,6 @@ export const showAllUsers: RequestHandler = async (req: Request, res: Response) 
             numOfRecords: users.length,
             data: users
         });
-
     } catch (error) {
         if (error instanceof Error) {
             return res.status(500).json({
@@ -31,7 +30,37 @@ export const showAllUsers: RequestHandler = async (req: Request, res: Response) 
                 errMsg: error.message
             });
         };
-    }
+    };
+};
+
+// @ GET SINGLE
+export const showSingleUser: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const id: number = parseInt(req.params.id);
+
+        const user: User | null = await User.findOneBy({
+            id
+        });
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                msg: 'User doesn\'t exist.'
+            });
+        };
+
+        return res.status(200).json({
+            success: true,
+            user,
+        });
+    } catch (error) {
+        if (error instanceof Error) {
+            return res.status(500).json({
+                success: false,
+                errMsg: error.message,
+            });
+        };
+    };
 };
 
 // * POST
@@ -54,8 +83,8 @@ export const createUser: RequestHandler = async (req: Request, res: Response) =>
         // });
 
         if (trackedUser) {
-            return res.status(200).json({
-                success: true,
+            return res.status(409).json({
+                success: false,
                 msg: 'User with provided name or email already exists.',
             });
         };
@@ -87,6 +116,53 @@ export const createUser: RequestHandler = async (req: Request, res: Response) =>
             return res.status(500).json({
                 success: false,
                 errMsg: error.message
+            });
+        };
+    };
+};
+
+// ? UPDATE
+export const editUser: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const id: number = parseInt(req.params.id);
+
+        const modificationData: Partial<IUser> = req.body;
+        let updatedUser: Partial<User> | undefined = undefined;
+
+        if (!modificationData.plainTextPassword) {
+            updatedUser = modificationData;
+        } else {
+            const passwordSalt: string = generatePasswordSalt();
+            const passwordHash = await hashPassword(modificationData.plainTextPassword, passwordSalt);
+
+            updatedUser = {
+                name: modificationData.name,
+                email: modificationData.email,
+                isAdmin: modificationData.isAdmin,
+                passwordSalt,
+                passwordHash
+            };
+        };
+
+        const result: UpdateResult = await User
+            .createQueryBuilder()
+            .update(User)
+            .set(updatedUser!)
+            .where('id = :userId', { userId: id })
+            .execute();
+
+        return res.status(200).json({
+            success: true,
+            msg: 'User updated.',
+            updatedData: updatedUser,
+            info: result
+        });
+
+    } catch (error) {
+        if (error instanceof Error) {
+            return res.status(500).json({
+                success: false,
+                errMsg: error.message,
             });
         };
     };

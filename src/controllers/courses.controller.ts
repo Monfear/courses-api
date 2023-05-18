@@ -49,8 +49,8 @@ export const showCourse: RequestHandler = async (req: Request, res: Response) =>
         });
 
         if (!course) {
-            return res.status(200).json({
-                success: true,
+            return res.status(404).json({
+                success: false,
                 msg: 'Course does not exist.'
             });
         };

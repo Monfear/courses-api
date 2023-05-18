@@ -93,7 +93,7 @@ export const editLesson: RequestHandler = async (req: Request, res: Response) =>
     try {
         const id: number = parseInt(req.params.id);
 
-        const updatedLesson: ILesson = req.body;
+        const updatedLesson: Partial<ILesson> = req.body;
 
         const result: UpdateResult = await dataSource
             .createQueryBuilder()

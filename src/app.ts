@@ -63,10 +63,10 @@ class App {
         }));
         this.app.use(showRequestInfo);
 
-        this.app.use('/api/courses', validateUser);
-        this.app.use('/api/lessons', validateUser);
-        this.app.use('/api/users', validateUser);
-    }
+        // this.app.use('/api/courses', validateUser);
+        // this.app.use('/api/lessons', validateUser);
+        // this.app.use('/api/users', validateUser);
+    };
 };
 
 (function startApp(): void {
