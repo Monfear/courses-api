@@ -126,7 +126,19 @@ export const editUser: RequestHandler = async (req: Request, res: Response) => {
     try {
         const id: number = parseInt(req.params.id);
 
-        // check if user exists
+        const user: User | null = await User.findOneBy({
+            id
+        });
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                msg: 'User doesn\'t exist.',
+                info: {
+                    affected: 0,
+                },
+            });
+        };
 
         const modificationData: Partial<IUser> = req.body;
         let updatedUser: Partial<User> | undefined = undefined;
@@ -180,17 +192,19 @@ export const deleteUser: RequestHandler = async (req: Request, res: Response) =>
             id
         });
 
-        const result: DeleteResult = await User.delete({
-            id
-        });
-
         if (!user) {
             return res.status(404).json({
                 success: false,
                 msg: 'User doesn\'t exist.',
-                info: result
+                info: {
+                    affected: 0,
+                },
             });
         };
+
+        const result: DeleteResult = await User.delete({
+            id
+        });
 
         return res.status(200).json({
             success: true,
