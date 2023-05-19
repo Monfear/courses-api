@@ -3,7 +3,7 @@ import { User } from "../models/user.model";
 import { IUser } from "../types/User.interface";
 import { hashPassword } from "../functions/hashPassword";
 import { dataSource } from "../db/orm";
-import { Repository, UpdateResult } from "typeorm";
+import { DeleteResult, Repository, UpdateResult } from "typeorm";
 import { generatePasswordSalt } from "../functions/generatePasswordSalt";
 
 // @ GET ALL
@@ -121,10 +121,12 @@ export const createUser: RequestHandler = async (req: Request, res: Response) =>
     };
 };
 
-// ? UPDATE
+// ? PATCH
 export const editUser: RequestHandler = async (req: Request, res: Response) => {
     try {
         const id: number = parseInt(req.params.id);
+
+        // check if user exists
 
         const modificationData: Partial<IUser> = req.body;
         let updatedUser: Partial<User> | undefined = undefined;
@@ -155,7 +157,8 @@ export const editUser: RequestHandler = async (req: Request, res: Response) => {
             success: true,
             msg: 'User updated.',
             updatedData: updatedUser,
-            info: result
+            info: result,
+            id
         });
 
     } catch (error) {
@@ -163,6 +166,42 @@ export const editUser: RequestHandler = async (req: Request, res: Response) => {
             return res.status(500).json({
                 success: false,
                 errMsg: error.message,
+            });
+        };
+    };
+};
+
+// ! DELETE
+export const deleteUser: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const id: number = parseInt(req.params.id);
+
+        const user: User | null = await User.findOneBy({
+            id
+        });
+
+        const result: DeleteResult = await User.delete({
+            id
+        });
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                msg: 'User doesn\'t exist.',
+                info: result
+            });
+        };
+
+        return res.status(200).json({
+            success: true,
+            msg: `User ${user.name} has been deleted succesfully.`,
+            info: result,
+        });
+    } catch (error) {
+        if (error instanceof Error) {
+            return res.status(500).json({
+                success: false,
+                errMsg: error.message
             });
         };
     };
