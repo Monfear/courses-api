@@ -5,13 +5,11 @@ import { dataSource } from "../db/orm";
 import { Lesson } from "../models/lesson.model";
 import { ICourse } from "../types/Course.interface";
 
-// @ GET
+// @ GET ALL
 export const showCourses: RequestHandler = async (req: Request, res: Response) => {
     try {
-        // const courses: Course[] = await Course.find();
-
-        const courses: Course[] = await dataSource
-            .getRepository(Course)
+        const courses: Course[] = await Course
+            .getRepository()
             .createQueryBuilder('course')
             .orderBy('course.id', 'ASC')
             .leftJoinAndSelect('course.lessons', 'lessons')
@@ -34,19 +32,21 @@ export const showCourses: RequestHandler = async (req: Request, res: Response) =
         if (error instanceof Error) {
             return res.status(500).json({
                 success: false,
-                errMsg: error.message,
             });
         };
     };
 };
 
+// @ GET SINGLE
 export const showCourse: RequestHandler = async (req: Request, res: Response) => {
     try {
         const id: number = parseInt(req.params.id);
 
-        const course: Course | null = await Course.findOneBy({
-            id,
-        });
+        const course: Course | null = await dataSource
+            .getRepository(Course)
+            .createQueryBuilder('course')
+            .where('course.id = :id', { id })
+            .getOne();
 
         if (!course) {
             return res.status(404).json({
@@ -80,7 +80,21 @@ export const showCourse: RequestHandler = async (req: Request, res: Response) =>
 // * POST
 export const createCourse: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const { title, description, category, level, price } = req.body;
+        const modificationData: ICourse = req.body;
+        const { title, description, category, level, price } = modificationData;
+
+        const trackedCourse: Course | null = await dataSource
+            .getRepository(Course)
+            .createQueryBuilder('course')
+            .where('course.title = :title', { title })
+            .getOne();
+
+        if (trackedCourse) {
+            return res.status(409).json({
+                success: false,
+                msg: 'Course with that title already exists.'
+            });
+        };
 
         const course: Course = Course.create({
             title,
@@ -94,7 +108,7 @@ export const createCourse: RequestHandler = async (req: Request, res: Response) 
 
         return res.status(201).json({
             success: true,
-            msg: 'Course created',
+            msg: 'Course has been created.',
             data: course,
         });
 
@@ -113,19 +127,35 @@ export const editCourse: RequestHandler = async (req: Request, res: Response) =>
     try {
         const id: number = parseInt(req.params.id);
 
-        const updatedCourse: ICourse = req.body;
+        const course: Course | null = await dataSource
+            .getRepository(Course)
+            .createQueryBuilder('course')
+            .where('course.id = :id', { id })
+            .getOne();
+
+        if (!course) {
+            return res.status(404).json({
+                success: false,
+                msg: 'Course doesn\'t exist.',
+                info: {
+                    affected: 0,
+                },
+            });
+        };
+
+        const modificationData: Partial<ICourse> = req.body;
 
         const result: UpdateResult = await dataSource
             .createQueryBuilder()
             .update(Course)
-            .set(updatedCourse)
+            .set(modificationData)
             .where('id = :courseId', { courseId: id })
             .execute();
 
         return res.status(200).json({
             success: true,
             msg: 'Course updated.',
-            updatedData: updatedCourse,
+            updatedData: modificationData,
             info: result
         });
     } catch (error) {
@@ -139,9 +169,29 @@ export const editCourse: RequestHandler = async (req: Request, res: Response) =>
 };
 
 // ! DELETE
-export const clearCourses: RequestHandler = async (req: Request, res: Response) => {
+export const deleteCourse: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const result: DeleteResult = await Course.delete({});
+        const id: number = parseInt(req.params.id);
+
+        const course: Course | null = await Course
+            .getRepository()
+            .createQueryBuilder('course')
+            .where('course.id = :id', { id })
+            .getOne();
+
+        if (!course) {
+            return res.status(404).json({
+                success: false,
+                msg: 'Course doesn\'t exist.',
+                info: {
+                    affected: 0,
+                },
+            });
+        };
+
+        const result: DeleteResult = await Course.delete({
+            id
+        });
 
         res.status(200).json({
             success: true,

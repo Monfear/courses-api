@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createCourse, clearCourses, editCourse, showCourse, showCourses } from "../controllers/courses.controller";
+import { createCourse, editCourse, showCourse, showCourses, deleteCourse } from "../controllers/courses.controller";
 
 const coursesRouter: Router = Router();
 
@@ -8,6 +8,6 @@ coursesRouter
     .get('/:id', showCourse)
     .post('/', createCourse)
     .patch('/:id', editCourse)
-    .delete('/', clearCourses)
+    .delete('/:id', deleteCourse)
 
 export default coursesRouter;

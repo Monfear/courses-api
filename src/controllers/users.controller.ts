@@ -72,7 +72,7 @@ export const createUser: RequestHandler = async (req: Request, res: Response) =>
         const repoUser: Repository<User> = dataSource.getRepository(User);
 
         const trackedUser: User | null = await repoUser.createQueryBuilder('user')
-            .where('name = :name OR email = :email', { name, email })
+            .where('user.name = :name OR user.email = :email', { name, email })
             .getOne();
 
         // const trackedUser: User | null = await repoUser.findOne({
