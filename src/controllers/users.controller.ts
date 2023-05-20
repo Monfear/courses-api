@@ -51,7 +51,7 @@ export const showSingleUser: RequestHandler = async (req: Request, res: Response
 
         return res.status(200).json({
             success: true,
-            user,
+            data: user,
         });
     } catch (error) {
         if (error instanceof Error) {
@@ -95,9 +95,9 @@ export const createUser: RequestHandler = async (req: Request, res: Response) =>
         const user: User = User.create({
             name,
             email,
+            isAdmin,
             passwordSalt,
             passwordHash,
-            isAdmin
         });
 
         await user.save();
@@ -150,9 +150,9 @@ export const editUser: RequestHandler = async (req: Request, res: Response) => {
             const passwordHash = await hashPassword(modificationData.plainTextPassword, passwordSalt);
 
             updatedUser = {
-                name: modificationData.name,
-                email: modificationData.email,
-                isAdmin: modificationData.isAdmin,
+                name: modificationData?.name || undefined,
+                email: modificationData?.email || undefined,
+                isAdmin: modificationData?.isAdmin || undefined,
                 passwordSalt,
                 passwordHash
             };
@@ -161,7 +161,7 @@ export const editUser: RequestHandler = async (req: Request, res: Response) => {
         const result: UpdateResult = await User
             .createQueryBuilder()
             .update(User)
-            .set(updatedUser!)
+            .set(updatedUser)
             .where('id = :userId', { userId: id })
             .execute();
 
@@ -170,7 +170,6 @@ export const editUser: RequestHandler = async (req: Request, res: Response) => {
             msg: 'User updated.',
             updatedData: updatedUser,
             info: result,
-            id
         });
 
     } catch (error) {
