@@ -133,6 +133,20 @@ export const editLesson: RequestHandler = async (req: Request, res: Response) =>
     try {
         const id: number = parseInt(req.params.id);
 
+        const lesson: Lesson | null = await Lesson.findOneBy({
+            id
+        });
+
+        if (!lesson) {
+            return res.status(404).json({
+                success: false,
+                msg: 'Lesson doesn\'t exist.',
+                info: {
+                    affected: 0,
+                },
+            });
+        };
+
         const updatedLesson: Partial<ILesson> = req.body;
 
         const result: UpdateResult = await dataSource
