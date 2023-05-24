@@ -5,20 +5,16 @@ import { DeleteResult, UpdateResult } from "typeorm";
 import { dataSource } from "../db/orm";
 import { ILesson } from "../types/Lesson.interface";
 
-// @ GET
+// @ GET ALL
 export const showLessons: RequestHandler = async (req: Request, res: Response) => {
     try {
-        // const lessons: Lesson[] = await Lesson.find();
-
-       const pageSize: number = Number(req.query.pageSize);
-       const pageNumber: number = Number(req.query.pageNumber);
-
-       console.log(pageSize, pageNumber)
+        const pageSize: number = Number(req.query.pageSize);
+        const pageNumber: number = Number(req.query.pageNumber);
 
         const lessons: Lesson[] = await dataSource
             .getRepository(Lesson)
-            .createQueryBuilder('lessons')
-            .orderBy('lessons.id', 'ASC')
+            .createQueryBuilder('lesson')
+            .orderBy('lesson.id', 'ASC')
             .limit(pageSize || 0)
             .offset(pageSize * (pageNumber - 1) || 0)
             .getMany();
@@ -36,6 +32,36 @@ export const showLessons: RequestHandler = async (req: Request, res: Response) =
             data: lessons,
         });
 
+    } catch (error) {
+        if (error instanceof Error) {
+            return res.status(500).json({
+                success: false,
+                errMsg: error.message,
+            });
+        };
+    };
+};
+
+// @ GET SINGLE
+export const showLesson: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const id: number = parseInt(req.params.id);
+
+        const lesson: Lesson | null = await Lesson.findOneBy({
+            id
+        });
+
+        if (!lesson) {
+            return res.status(404).json({
+                success: false,
+                msg: 'Lesson doesn\'t exist'
+            });
+        };
+
+        return res.status(200).json({
+            success: true,
+            data: lesson
+        });
     } catch (error) {
         if (error instanceof Error) {
             return res.status(500).json({
