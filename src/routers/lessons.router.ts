@@ -8,6 +8,6 @@ lessonsRouter
     .get('/:id', showLesson)
     .post('/courses/:courseId', createLesson)
     .patch('/:id', editLesson)
-    .delete('/', clearLessons)
+    .delete('/:id', clearLessons)
 
 export default lessonsRouter;

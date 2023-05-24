@@ -176,7 +176,22 @@ export const editLesson: RequestHandler = async (req: Request, res: Response) =>
 // ! DELETE
 export const clearLessons: RequestHandler = async (req: Request, res: Response) => {
     try {
-        const result: DeleteResult = await Lesson.delete({});
+        const id: number = parseInt(req.params.id);
+
+        const lesson: Lesson | null = await Lesson.findOneBy({
+            id,
+        });
+
+        if (!lesson) {
+            return res.status(404).json({
+                success: false,
+                msg: 'Lesson doesn\'t exist.',
+            });
+        };
+
+        const result: DeleteResult = await Lesson.delete({
+            id,
+        });
 
         res.status(200).json({
             success: true,
