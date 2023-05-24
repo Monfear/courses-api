@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, BaseEntity } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, BaseEntity, ManyToMany, JoinTable } from "typeorm";
 import { Lesson } from "./lesson.model";
+import { Author } from "./author.model";
 
 @Entity({
     name: 'courses',
@@ -21,14 +22,14 @@ export class Course extends BaseEntity{
     @Column()
     description: string;
 
-    // @Column()
-    // author: string;
-
     @Column()
     level: string;
 
     @OneToMany(() => Lesson, (lesson) => lesson.course)
     lessons: Lesson[];
+
+    @ManyToMany(() => Author, { cascade: true })
+    authors: Author[];
 
     @CreateDateColumn()
     createdAt: Date;
