@@ -84,11 +84,25 @@ export const createLesson: RequestHandler = async (req: Request, res: Response) 
         if (!course) {
             return res.status(404).json({
                 success: false,
-                errMsg: 'Course not found.'
+                msg: 'No course found to attach lesson.'
             });
         };
 
-        const { title, duration } = req.body;
+        const modificationData: ILesson = req.body;
+        const { title, duration } = modificationData;
+
+        const trackedLesson: Lesson | null = await dataSource
+            .getRepository(Lesson)
+            .createQueryBuilder('lesson')
+            .where('lesson.title = :title AND lesson.course_id = :course_id', { title, course_id: courseId })
+            .getOne();
+
+        if (trackedLesson) {
+            return res.status(409).json({
+                success: false,
+                msg: 'This course has lesson with this title already.'
+            });
+        };
 
         const lesson: Lesson = Lesson.create({
             title,
