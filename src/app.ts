@@ -10,6 +10,7 @@ import usersRouter from "./routers/users.router";
 import authRouter from "./routers/auth.router";
 import { configDotenv } from "./utils/dotenv";
 import { validateUser } from "./middlewares/validateUser.middleware";
+import authorsRouter from "./routers/authors.router";
 
 class App {
     private port: number = 3000;
@@ -53,6 +54,7 @@ class App {
         this.app.use('/api/lessons', lessonsRouter);
         this.app.use('/api/users', usersRouter);
         this.app.use('/api/auth', authRouter);
+        this.app.use('/api/authors', authorsRouter);
     };
 
     private arrangeMiddlewares(): void {
